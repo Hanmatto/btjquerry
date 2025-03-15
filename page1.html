@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <title>jQuerry</title>
+</head>
+
+<body>
+    <h1 class="banner">
+        <p id="my-settimeout"></p>
+    </h1>
+
+    <h2 class="banner">
+        <p id="my-setinterval"></p>
+    </h2>
+
+    <header>
+        <div class="input--container">
+            <h1 style="text-align: center;">NHẬP CATEGORY</h1>
+            <input type="text" id="nameCategory" placeholder="Nhập tên Category....">
+            <input type="text" id="descriptionCategory" placeholder="Miêu tả Category....">
+            <span id="idCategory"></span>
+
+            <button id="createCategory">Tạo Category</button>
+        </div>
+
+        <div class="input--container">
+            <h1 style="text-align: center;">NHẬP PRODUCTION</h1>
+
+            <div>
+                <input type="text" id="nameProduct" placeholder="Nhập tên Product....">
+                <input type="text" id="NewPrice" placeholder="Nhập giá Product....">
+                <input type="text" id="oldPrice" placeholder="Nhập giá cũ Product...">
+                <select type="text" id="categoryProduct"></select>
+                <input type="text" id="img" placeholder="Nhập URL hình ảnh sản phẩm">
+                <p id="idProduct"></p>
+                <button id="createProduct">Tạo Product</button>
+            </div>
+    </header>
+    <h1 class="banner">LIST CATEGORY</h1>
+    <div class="category--content-container"></div>
+
+    <h1 class="banner">LIST PRODUCTIONS</h1>
+    <div class="production--content-container"></div>
+
+</body>
+
+<script>
+
+    const myTimeout = setTimeout(myTime, 200);
+    function myTime() {
+        $("#my-settimeout").text("WELCOME TO MY SUPERMARKET");
+    }
+
+    const myInterval = setInterval(myTimer, 500);
+    function myTimer() {
+        var d = new Date();
+        var t = d.toLocaleString();
+        $("#my-setinterval").text("Bây giờ là: " + t);
+    }
+
+    $(document).ready(function () {
+        const categories = [];
+        const products = [];
+
+        $("#createCategory").click(function () {
+            let nameCategory = $("#nameCategory").val();
+            let descriptionCategory = $("#descriptionCategory").val();
+            let idCategory = Math.floor(Math.random() * 1000);
+            $("#idCategory").text(`ID Category: ` + idCategory);
+
+            let category = {
+                id: idCategory,
+                name: nameCategory,
+                description: descriptionCategory
+            };
+            categories.push(category);
+
+            let newCategory = `<div>
+                <h2>${category.name}</h2>
+                <p>${category.description}</p>
+                </div>
+            `;
+            $(".category--content-container").append(newCategory);
+
+            // thêm Category vào select
+            $("#categoryProduct").append(`<option value="${idCategory}">
+                ${nameCategory}
+                </option>`);
+        })
+
+        $("#createProduct").click(function () {
+            let nameProduct = $("#nameProduct").val();
+            let NewPriceProduct = $("#NewPrice").val();
+            let OldPriceProduct = $("#oldPrice").val();
+            let categoryProduct = $("#categoryProduct").val();
+            let imgProduct = $("#img").val();
+            let idProduct = Math.floor(Math.random() * 10000);
+            $("#idProduct").text(`ID Product: ` + idProduct);
+
+            let product = {
+                id: idProduct,
+                name: nameProduct,
+                NewPrice: NewPriceProduct,
+                OldPrice: OldPriceProduct,
+                categoryProduct: categoryProduct,
+                imgProduct: imgProduct,
+            };
+            products.push(product);
+            renderProductions();
+        })
+
+        function renderProductions() {
+            $(".production--content-container").empty();
+
+            categories.forEach(category => {
+                const CategoryTittle = $("<div>").attr("id", "list-category").text(category.name);
+                $(".production--content-container").append(CategoryTittle);
+
+                let foundProduct = products.filter(product => Number(product.categoryProduct) === category.id);
+                foundProduct.forEach(product => {
+                    let newProduct = `<div>
+                            <img src="${product.imgProduct}" alt="">
+                            <h2>${product.name}</h2>
+                            <p>Giá mới: ${product.NewPrice}</p>
+                            <p>Giá cũ: ${product.OldPrice}</p>
+                            </div>`
+                    $(".production--content-container").append(newProduct);
+                })
+            })
+        }
+    })
+
+
+
+</script>
+
+</html>
